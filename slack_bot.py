@@ -2,14 +2,14 @@
 import slack
 from flask import Flask, request, jsonify
 from slackeventsapi import SlackEventAdapter
-import os
+from os import environ
 import string
 import random
 import json
 
-SLACK_TOKEN = ""
-SIGNING_SECRET = ""
-CHANNEL_ID = ""
+SLACK_TOKEN = environ.get('SLACK_TOKEN')
+SIGNING_SECRET = environ.get('SIGNING_SECRET')
+CHANNEL_ID = environ.get('CHANNEL_ID')
 
 app = Flask(__name__)
 slack_event_adapter = SlackEventAdapter(SIGNING_SECRET, '/slack/events', app)
