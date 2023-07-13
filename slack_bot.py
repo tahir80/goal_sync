@@ -29,6 +29,9 @@ def endpoint():
     return jsonify({'status': 'success'})
 # hello
 
+@app.route('/test', methods=['GET'])
+def test():
+    return 'Welcome to the screen!'
 
 @app.route('/interactivity', methods=['POST'])
 def interactivity():
