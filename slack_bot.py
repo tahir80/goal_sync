@@ -60,16 +60,16 @@ def handle_team_join(payload):
 
     #count the number of members
     # Parse the JSON response
-    response_data = json.loads(user_list)
+    # response_data = json.loads(user_list)
 
-    # Get the list of members from the response
-    members = response_data.get("members", [])
+    # # Get the list of members from the response
+    # members = response_data.get("members", [])
 
-    # Count the number of members
-    member_count = len(members)
+    # # Count the number of members
+    # member_count = len(members)
 
-    # Print the count of members
-    print(f"The number of users: {member_count}")
+    # # Print the count of members
+    # print(f"The number of users: {member_count}")
 
     user_id = event.get('user')
 
