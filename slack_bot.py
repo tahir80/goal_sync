@@ -16,6 +16,14 @@ slack_event_adapter = SlackEventAdapter(SIGNING_SECRET, '/slack/events', app)
 
 client = slack.WebClient(token=SLACK_TOKEN)
 
+try:
+    response = client.auth_test()
+    print("API call successful!")
+    print("Team: ", response['team'])
+    print("User: ", response['user'])
+except:
+    print("error in API call")
+
 user_sessions = {}
 
 @app.route('/', methods=['POST'])
@@ -56,20 +64,6 @@ def message(payload):
 def handle_team_join(payload):
     print(" new member joined")
     event = payload.get('event', {})
-    user_list = client.users_list()
-
-    #count the number of members
-    # Parse the JSON response
-    # response_data = json.loads(user_list)
-
-    # # Get the list of members from the response
-    # members = response_data.get("members", [])
-
-    # # Count the number of members
-    # member_count = len(members)
-
-    # # Print the count of members
-    # print(f"The number of users: {member_count}")
 
     user_id = event.get('user')
 
@@ -77,6 +71,8 @@ def handle_team_join(payload):
     res = client.conversations_open(users=user_id)
    
     channel_id = res['channel']['id']
+
+    channel_id = user_id
 
     if user_id not in user_sessions:
         # New user joined the channel
