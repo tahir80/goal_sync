@@ -7,9 +7,9 @@ import string
 import random
 import json
 
-SLACK_TOKEN = "xoxb-5328365176998-5334989540850-Ti4HW1S5gdAA6vHEUINOOHOK"
-SIGNING_SECRET = "22238f2e2ddafaa7b8154bd7510cee23"
-CHANNEL_ID = "C059ECX4JA3"
+SLACK_TOKEN = ""
+SIGNING_SECRET = ""
+CHANNEL_ID = ""
 
 app = Flask(__name__)
 slack_event_adapter = SlackEventAdapter(SIGNING_SECRET, '/slack/events', app)
