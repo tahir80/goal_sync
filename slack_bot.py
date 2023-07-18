@@ -46,6 +46,20 @@ def interactivity():
     print("I was called here")
     payload = request.form.get("payload")
     print(payload)
+    
+    # Load the payload JSON string into a Python dictionary
+    payload_data = json.loads(payload)
+
+    # Access the 'actions' field from the payload
+    actions = payload_data.get('actions', [])
+    
+    # Loop through the actions to find the desired text
+    for action in actions:
+        if action.get('text', {}).get('text') == "I want to create a goal first":
+            print("User wants to create a goal first!")
+            # You can perform additional actions here based on the user's choice
+            break
+
     return "", 200
 
 @slack_event_adapter.on('message')
@@ -72,7 +86,6 @@ def handle_team_join(payload):
    
     channel_id = res['channel']['id']
 
-    channel_id = user_id
 
     if user_id not in user_sessions:
         # New user joined the channel
@@ -134,7 +147,7 @@ def handle_team_join(payload):
                             "type": "button",
                             "text": {
                                 "type": "plain_text",
-                                "text": "I want to create a goal first",
+                                "text": "Set a goal",
                                 "emoji": True
                             },
                             "value": "click_me_123",
@@ -165,7 +178,7 @@ def handle_team_join(payload):
                             "type": "button",
                             "text": {
                                 "type": "plain_text",
-                                "text": "Show goals by others",
+                                "text": "Show goals set by others",
                                 "emoji": True
                             },
                             "value": "click_me_123",
@@ -190,40 +203,6 @@ def generate_session_id(length):
     characters = string.ascii_uppercase + string.ascii_lowercase + string.digits
     session_id = ''.join(random.choice(characters) for _ in range(length))
     return session_id
-
-
-def detect_intent_texts(project_id, session_id, text, language_code):
-    """Returns the result of detect intent with texts as inputs.
-    Using the same `session_id` between requests allows continuation
-    of the conversation."""
-    # from google.cloud import dialogflow
-    # import dialogflow_v2 as dialogflow
-    from google.cloud import dialogflow
-
-    session_client = dialogflow.SessionsClient()
-
-    session = session_client.session_path(project_id, session_id)
-    print("Session path: {}\n".format(session))
-
-    text_input = dialogflow.TextInput(text=text, language_code=language_code)
-
-    query_input = dialogflow.QueryInput(text=text_input)
-
-    response = session_client.detect_intent(
-        request={"session": session, "query_input": query_input}
-    )
-
-    print("Fulfillment text: {}\n".format(response.query_result))
-    # return response.query_result.fulfillment_text
-
-    fulfillment_messages = response.query_result.fulfillment_messages
-    text_responses = []
-
-    for message in fulfillment_messages:
-        if message.text:
-            text_responses.append(message.text.text)
-
-    return text_responses
 
 
 @slack_event_adapter.on("member_left_channel")
