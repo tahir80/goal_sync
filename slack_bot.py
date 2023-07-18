@@ -19,6 +19,8 @@ slack_event_adapter = SlackEventAdapter(SIGNING_SECRET, '/slack/events', app)
 
 client = slack.WebClient(token=SLACK_TOKEN)
 
+app.secret_key = 'youwillneverknowmysecretkeyunlessyitoldyou’
+
 try:
     response = client.auth_test()
     print("API call successful!")
