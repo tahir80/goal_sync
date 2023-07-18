@@ -1,6 +1,6 @@
 
 import slack
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, session
 from slackeventsapi import SlackEventAdapter
 from os import environ
 import string
@@ -60,6 +60,8 @@ def interactivity():
     for action in actions:
         if action.get('text', {}).get('text') == "I want to create a goal first":
             print("User wants to create a goal first!")
+            if 'goal_set' not in session['goal_set']:
+                session['goal_set'] = "goal_set"
             # chatbot = SmartGoalSettingChatbot()
             # chatbot.start_conversation()
             # You can perform additional actions here based on the user's choice
@@ -77,6 +79,9 @@ def message(payload):
 
     if text == "hi":
         client.chat_postMessage(channel=channel_id, text='Hello World!')
+    if session['goal_set']:
+        print("success")
+
 
 
 @slack_event_adapter.on("member_joined_channel")
