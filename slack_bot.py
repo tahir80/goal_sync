@@ -7,6 +7,8 @@ import string
 import random
 import json
 
+from GoalSettingBot import SmartGoalSettingChatbot
+
 SLACK_TOKEN = environ.get('SLACK_TOKEN')
 SIGNING_SECRET = environ.get('SIGNING_SECRET')
 CHANNEL_ID = environ.get('CHANNEL_ID')
@@ -57,6 +59,8 @@ def interactivity():
     for action in actions:
         if action.get('text', {}).get('text') == "I want to create a goal first":
             print("User wants to create a goal first!")
+            chatbot = SmartGoalSettingChatbot()
+            chatbot.start_conversation()
             # You can perform additional actions here based on the user's choice
             break
 
@@ -64,7 +68,7 @@ def interactivity():
 
 @slack_event_adapter.on('message')
 def message(payload):
-    # print(payload)
+    print(payload)
     event = payload.get('event', {})
     channel_id = event.get('channel')
     user_id = event.get('user')
