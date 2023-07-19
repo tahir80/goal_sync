@@ -28,7 +28,8 @@ app.config['SESSION_REDIS'] = redis.from_url(REDIS_URL)
 
 app.secret_key = "youwillneverknowmysecretkeyunlessyitoldyou"
 
-session.init_app(app)
+Session(app)
+
 
 slack_event_adapter = SlackEventAdapter(SIGNING_SECRET, '/slack/events', app)
 
