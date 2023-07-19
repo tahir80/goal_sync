@@ -15,20 +15,18 @@ from GoalSettingBot import SmartGoalSettingChatbot
 SLACK_TOKEN = environ.get('SLACK_TOKEN')
 SIGNING_SECRET = environ.get('SIGNING_SECRET')
 CHANNEL_ID = environ.get('CHANNEL_ID')
-REDIS_URL = environ.get('REDIS_URL')
 
+REDIS_HOST = environ.get('REDIS_HOST')
+REDIS_PORT = environ.get('REDIS_PORT')
+REDIS_PASS = environ.get('REDIS_PASS')
 
 
 # Initialize the session extension
 # app.secret_key = 'your_secret_key'  # Change this to a secure secret key
 
 app = Flask(__name__)
-app.config['SESSION_TYPE'] = 'redis'
-app.config['SESSION_REDIS'] = redis.from_url(REDIS_URL)
 
 app.secret_key = "youwillneverknowmysecretkeyunlessyitoldyou"
-
-Session(app)
 
 slack_event_adapter = SlackEventAdapter(SIGNING_SECRET, '/slack/events', app)
 
@@ -76,9 +74,13 @@ def interactivity():
     # Loop through the actions to find the desired text
     for action in actions:
         if action.get('text', {}).get('text') == "I want to create a goal first":
+            r = redis.Redis(
+            host=REDIS_HOST,
+            port=REDIS_PORT,
+            password=REDIS_PASS)
+
             print("User wants to create a goal first!")
-            session["goal_set"] = "goal_set"
-            print(session["goal_set"])
+            r.set('goal_set', 'goal_set')
             # chatbot = SmartGoalSettingChatbot()
             # chatbot.start_conversation()
             # You can perform additional actions here based on the user's choice
@@ -97,9 +99,14 @@ def message(payload):
 
     if text == "hi":
         client.chat_postMessage(channel=channel_id, text='Hello World!')
-    value = session.get('goal_set')
-    if value is not None:
-        print("success!")
+    
+
+    r = redis.Redis(
+        host=REDIS_HOST,
+        port=REDIS_PORT,
+        password=REDIS_PASS)
+    
+    print(r.get('goal_set'))
 
 
 
