@@ -1,6 +1,7 @@
 
 import slack
 from flask import Flask, request, jsonify, session
+from flask_session import Session
 from slackeventsapi import SlackEventAdapter
 from os import environ
 import string
@@ -15,6 +16,9 @@ SIGNING_SECRET = environ.get('SIGNING_SECRET')
 CHANNEL_ID = environ.get('CHANNEL_ID')
 
 app = Flask(__name__)
+
+Session(app)
+
 slack_event_adapter = SlackEventAdapter(SIGNING_SECRET, '/slack/events', app)
 
 client = slack.WebClient(token=SLACK_TOKEN)

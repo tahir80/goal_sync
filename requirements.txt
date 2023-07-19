@@ -5,4 +5,6 @@ slackclient==2.9.4
 slackeventsapi
 openai
 langchain
+redis
+Flask-Session
 
