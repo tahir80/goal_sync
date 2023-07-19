@@ -72,10 +72,14 @@ def test():
 def interactivity():
     print("I was called here")
     payload = request.form.get("payload")
+
+    # Get the channel ID from the 'container' object
     print(payload)
-    
+
     # Load the payload JSON string into a Python dictionary
     payload_data = json.loads(payload)
+
+    channel_id = payload_data['container']['channel_id']
 
     # Access the 'actions' field from the payload
     actions = payload_data.get('actions', [])

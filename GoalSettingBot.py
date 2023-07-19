@@ -53,6 +53,7 @@ class SmartGoalSettingChatbot:
     
     def kick_start(self):
         output = self.chatgpt_chain.predict(human_input="Hello")
+        return output
 
     def get_next_predict(self, input):
         output = self.chatgpt_chain.predict(human_input=input)
