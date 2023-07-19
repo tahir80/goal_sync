@@ -41,7 +41,7 @@ slack_event_adapter = SlackEventAdapter(SIGNING_SECRET, '/slack/events', app)
 
 client = slack.WebClient(token=SLACK_TOKEN)
 
-
+chatbot = SmartGoalSettingChatbot()
 
 try:
     response = client.auth_test()
@@ -51,7 +51,7 @@ try:
 except:
     print("error in API call")
 
-user_sessions = {}
+user_sessions = {} # replace it with redis
 
 @app.route('/', methods=['POST'])
 def endpoint():
@@ -92,7 +92,6 @@ def interactivity():
             print("User wants to create a goal first!")
             r.set('goal_set', 'goal_set')
 
-            chatbot = SmartGoalSettingChatbot()
             client.chat_postMessage(channel=channel_id, text=chatbot.kick_start())
             
             # You can perform additional actions here based on the user's choice
@@ -113,12 +112,16 @@ def message(payload):
         client.chat_postMessage(channel=channel_id, text='Hello World!')
     
 
-    r = redis.Redis(
-        host=REDIS_HOST,
-        port=REDIS_PORT,
-        password=REDIS_PASS)
+    r = redis.Redis(connection_pool=REDIS_POOL)
     
-    print(r.get('goal_set'))
+    if r.get('goal_set') is not None:
+        while True:
+            message = chatbot.get_next_predict(text)
+            client.chat_postMessage(channel=channel_id, text=message)
+            if text.lower() == "exit" or text.lower() == "end":
+                print("Conversation ended. Goodbye!")
+                break
+
 
 
 
