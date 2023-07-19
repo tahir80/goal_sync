@@ -66,6 +66,6 @@ class SmartGoalSettingChatbot:
         #         print("Conversation ended. Goodbye!")
         #         break
 
-if __name__ == "__main__":
-    chatbot = SmartGoalSettingChatbot()
-    chatbot.start_conversation()
+# if __name__ == "__main__":
+#     chatbot = SmartGoalSettingChatbot()
+#     chatbot.kick_start()
