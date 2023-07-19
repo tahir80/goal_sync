@@ -82,7 +82,8 @@ def interactivity():
     
     # Loop through the actions to find the desired text
     for action in actions:
-        if action.get('text', {}).get('text') == "I want to create a goal first":
+        if action.get('text', {}).get('text') == "Set a goal":
+            print("success. I want to create a goalç")
             r = redis.Redis(connection_pool=REDIS_POOL)
             print("User wants to create a goal first!")
             r.set('goal_set', 'goal_set')
