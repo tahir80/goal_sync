@@ -88,17 +88,9 @@ def interactivity():
             print("User wants to create a goal first!")
             r.set('goal_set', 'goal_set')
 
-            value = r.get('goal_set')
-
-            if value == 'goal_set':
-                print("Redis connection successful!")
-            else:
-                print("Redis connection failed.")
-
-
-            print(r.get('goal_set'))
-            # chatbot = SmartGoalSettingChatbot()
-            # chatbot.start_conversation()
+            chatbot = SmartGoalSettingChatbot()
+            client.chat_postMessage(channel="D05AR3CCT88", text=chatbot.kick_start())
+            
             # You can perform additional actions here based on the user's choice
             break
 

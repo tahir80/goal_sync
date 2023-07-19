@@ -50,18 +50,21 @@ class SmartGoalSettingChatbot:
             verbose=True,
             memory=ConversationBufferWindowMemory(k=100),
         )
-
-    def start_conversation(self):
+    
+    def kick_start(self):
         output = self.chatgpt_chain.predict(human_input="Hello")
-        print("System: " + output)
 
-        while True:
-            user_input = str(input("User: "))
-            output = self.chatgpt_chain.predict(human_input=user_input)
-            print("System: " + output)
-            if user_input.lower() == "exit" or user_input.lower() == "end":
-                print("Conversation ended. Goodbye!")
-                break
+    def get_next_predict(self, input):
+        output = self.chatgpt_chain.predict(human_input=input)
+        return output
+
+        # while True:
+        #     user_input = str(input("User: "))
+        #     output = self.chatgpt_chain.predict(human_input=user_input)
+        #     print("System: " + output)
+        #     if user_input.lower() == "exit" or user_input.lower() == "end":
+        #         print("Conversation ended. Goodbye!")
+        #         break
 
 if __name__ == "__main__":
     chatbot = SmartGoalSettingChatbot()
