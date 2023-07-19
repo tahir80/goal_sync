@@ -69,7 +69,7 @@ def test():
     return 'Welcome to the screen!'
 
 @app.route('/interactivity', methods=['POST'])
-def interactivity():dsfsd
+def interactivity():
     print("I was called here")
     payload = request.form.get("payload")
 
@@ -115,12 +115,10 @@ def message(payload):
     r = redis.Redis(connection_pool=REDIS_POOL)
     
     if r.get('goal_set') is not None:
-        while True:
-            message = chatbot.get_next_predict(text)
-            client.chat_postMessage(channel=channel_id, text=message)
-            if text.lower() == "exit" or text.lower() == "end":
-                print("Conversation ended. Goodbye!")
-                break
+        message = chatbot.get_next_predict(text)
+        client.chat_postMessage(channel=channel_id, text=message)
+        if text.lower() == "exit" or text.lower() == "end":
+            print("Conversation ended. Goodbye!")
 
 
 
