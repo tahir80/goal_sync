@@ -30,7 +30,6 @@ app.secret_key = "youwillneverknowmysecretkeyunlessyitoldyou"
 
 Session(app)
 
-
 slack_event_adapter = SlackEventAdapter(SIGNING_SECRET, '/slack/events', app)
 
 client = slack.WebClient(token=SLACK_TOKEN)
@@ -90,6 +89,7 @@ def interactivity():
 @slack_event_adapter.on('message')
 def message(payload):
     print(payload)
+    session.get('goal_set', 'not set')
     event = payload.get('event', {})
     channel_id = event.get('channel')
     user_id = event.get('user')
@@ -97,7 +97,8 @@ def message(payload):
 
     if text == "hi":
         client.chat_postMessage(channel=channel_id, text='Hello World!')
-    if session["goal_set"]:
+    value = session.get('goal_set')
+    if value is not None:
         print("success!")
 
 
