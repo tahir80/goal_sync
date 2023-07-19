@@ -88,8 +88,17 @@ def interactivity():
             print("User wants to create a goal first!")
             r.set('goal_set', 'goal_set')
 
+            event = payload.get('event', {})
+
+            user_id = event.get('user')
+
+            # to get channel ID for DM
+            res = client.conversations_open(users=user_id)
+   
+            channel_id = res['channel']['id']
+
             chatbot = SmartGoalSettingChatbot()
-            client.chat_postMessage(channel="D05AR3CCT88", text=chatbot.kick_start())
+            client.chat_postMessage(channel=channel_id, text=chatbot.kick_start())
             
             # You can perform additional actions here based on the user's choice
             break
