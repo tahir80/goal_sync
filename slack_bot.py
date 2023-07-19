@@ -89,7 +89,7 @@ def interactivity():
 
             value = r.get('goal_set')
 
-            if value == b'test_value':
+            if value == b'goal_set':
                 print("Redis connection successful!")
             else:
                 print("Redis connection failed.")
