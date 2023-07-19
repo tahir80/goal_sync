@@ -86,6 +86,15 @@ def interactivity():
             r = redis.Redis(connection_pool=REDIS_POOL)
             print("User wants to create a goal first!")
             r.set('goal_set', 'goal_set')
+
+            value = r.get('goal_set')
+
+            if value == b'test_value':
+                print("Redis connection successful!")
+            else:
+                print("Redis connection failed.")
+
+
             print(r.get('goal_set'))
             # chatbot = SmartGoalSettingChatbot()
             # chatbot.start_conversation()
