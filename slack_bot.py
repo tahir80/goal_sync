@@ -86,6 +86,7 @@ def interactivity():
             r = redis.Redis(connection_pool=REDIS_POOL)
             print("User wants to create a goal first!")
             r.set('goal_set', 'goal_set')
+            print(r.get('goal_set'))
             # chatbot = SmartGoalSettingChatbot()
             # chatbot.start_conversation()
             # You can perform additional actions here based on the user's choice
