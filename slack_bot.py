@@ -7,6 +7,7 @@ from os import environ
 import string
 import random
 import json
+import redis
 
 from GoalSettingBot import SmartGoalSettingChatbot
 
@@ -14,16 +15,26 @@ from GoalSettingBot import SmartGoalSettingChatbot
 SLACK_TOKEN = environ.get('SLACK_TOKEN')
 SIGNING_SECRET = environ.get('SIGNING_SECRET')
 CHANNEL_ID = environ.get('CHANNEL_ID')
+REDIS_URL = environ.get('REDIS_URL')
+
+
+
+# Initialize the session extension
+# app.secret_key = 'your_secret_key'  # Change this to a secure secret key
 
 app = Flask(__name__)
+app.config['SESSION_TYPE'] = 'redis'
+app.config['SESSION_REDIS'] = redis.from_url(REDIS_URL)
 
-Session(app)
+app.secret_key = "youwillneverknowmysecretkeyunlessyitoldyou"
+
+session.init_app(app)
 
 slack_event_adapter = SlackEventAdapter(SIGNING_SECRET, '/slack/events', app)
 
 client = slack.WebClient(token=SLACK_TOKEN)
 
-app.secret_key = "youwillneverknowmysecretkeyunlessyitoldyou"
+
 
 try:
     response = client.auth_test()
@@ -107,17 +118,7 @@ def handle_team_join(payload):
         # New user joined the channel
         session_id = generate_session_id(10)
         user_sessions[user_id] = session_id
-        # bot_response = detect_intent_texts("reactpageagent-jypw", session_id,
-                                        #    "ice breaker", "en-US")
-
-        # detect_intent_texts("reactpageagent-jypw", session_id, \
-        #                                "ice breaker", "en-US")
-
-        # print(bot_response.query_result.fulfillment_text)
-        # for response in bot_response:
-        #     client.chat_postMessage(channel=channel_id, text=response[0])
         
-
         user_info = client.users_info(user=user_id)
         user_name = user_info["user"]["name"]
 
