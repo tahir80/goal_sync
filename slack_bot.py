@@ -106,7 +106,7 @@ def message(payload):
     event = payload.get('event', {})
     channel_id = event.get('channel')
     user_id = event.get('user')
-    text = event.get('text')
+    text = event.get('text')xfvsdv
 
     if text == "hi":
         client.chat_postMessage(channel=channel_id, text='Hello World!')
