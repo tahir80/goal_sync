@@ -69,7 +69,7 @@ def test():
     return 'Welcome to the screen!'
 
 @app.route('/interactivity', methods=['POST'])
-def interactivity():
+def interactivity():dsfsd
     print("I was called here")
     payload = request.form.get("payload")
 
@@ -106,7 +106,7 @@ def message(payload):
     event = payload.get('event', {})
     channel_id = event.get('channel')
     user_id = event.get('user')
-    text = event.get('text')xfvsdv
+    text = event.get('text')
 
     if text == "hi":
         client.chat_postMessage(channel=channel_id, text='Hello World!')
