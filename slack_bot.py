@@ -21,6 +21,15 @@ REDIS_PORT = environ.get('REDIS_PORT')
 REDIS_PASS = environ.get('REDIS_PASS')
 
 
+REDIS_POOL = redis.ConnectionPool(
+    host=REDIS_HOST,
+    port=REDIS_PORT,
+    password=REDIS_PASS,
+    decode_responses=True  # Set to True to automatically decode responses to strings
+)
+
+
+
 # Initialize the session extension
 # app.secret_key = 'your_secret_key'  # Change this to a secure secret key
 
@@ -74,11 +83,7 @@ def interactivity():
     # Loop through the actions to find the desired text
     for action in actions:
         if action.get('text', {}).get('text') == "I want to create a goal first":
-            r = redis.Redis(
-            host=REDIS_HOST,
-            port=REDIS_PORT,
-            password=REDIS_PASS)
-
+            r = redis.Redis(connection_pool=REDIS_POOL)
             print("User wants to create a goal first!")
             r.set('goal_set', 'goal_set')
             # chatbot = SmartGoalSettingChatbot()
