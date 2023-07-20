@@ -100,14 +100,26 @@ def interactivity():
     return "", 200
 
 
+@client.events.on("app_mention")
+def on_app_mention(data):
+    channel_id = data["event"]["channel"]
+    user_id = data["event"]["user"]
+    message = f"Hello, <!channel>! We are starting a group conversation. Please join in!"
+    
+    # Post the group conversation message
+    response = client.conversations_open(users=[user_id])
+    group_channel_id = response["channel"]["id"]
+    client.chat_postMessage(channel=group_channel_id, text=message)
+
+
 def get_bot_id():
     response = client.auth_test()
     return response['user_id']
 
 BOT_ID = get_bot_id()
 
-@slack_event_adapter.on('message')
-def message(payload):
+# @slack_event_adapter.on('message')
+# def message(payload):
     print(payload)
     session.get('goal_set', 'not set')
     event = payload.get('event', {})
@@ -126,10 +138,10 @@ def message(payload):
 
     if r.exists('goal_set') and user_id != BOT_ID:
         print("I was called from the combined logical conditions")
-        # message = chatbot.get_next_predict(text)
-        # client.chat_postMessage(channel=channel_id, text=message)
-        # if text.lower() == "exit" or text.lower() == "end":
-        #     print("Conversation ended. Goodbye!")
+        message = chatbot.get_next_predict(text)
+        client.chat_postMessage(channel=channel_id, text=message, as_user = True)
+        if text.lower() == "exit" or text.lower() == "end":
+            print("Conversation ended. Goodbye!")
 
 
 
