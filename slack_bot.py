@@ -103,6 +103,8 @@ def interactivity():
 @slack_event_adapter.on("app_mention")
 def on_app_mention(data):
     channel_id = data["event"]["channel"]
+    print(data)
+    print(channel_id)
     user_id = data["event"]["user"]
     message = f"Hello, <!channel>! We are starting a group conversation. Please join in!"
     
