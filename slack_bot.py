@@ -99,6 +99,13 @@ def interactivity():
 
     return "", 200
 
+
+def get_bot_id():
+    response = client.auth_test()
+    return response['user_id']
+
+BOT_ID = get_bot_id()
+
 @slack_event_adapter.on('message')
 def message(payload):
     print(payload)
