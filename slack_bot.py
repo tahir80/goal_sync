@@ -115,36 +115,36 @@ def on_app_mention(data):
         client.chat_postMessage(channel=channel_id, text=message)
 
 
-def get_bot_id():
+# def get_bot_id():
+#     response = client.auth_test()
+#     return response['user_id']
+
+# BOT_ID = get_bot_id()
+
+@slack_event_adapter.on('message')
+def message(payload):
+    print(payload)
+    session.get('goal_set', 'not set')
+    event = payload.get('event', {})
+    channel_id = event.get('channel')
+    user_id = event.get('user')
+    text = event.get('text')
+
+    if text == "hi":
+        client.chat_postMessage(channel=channel_id, text='Hello World!')
+    
+
+    r = redis.Redis(connection_pool=REDIS_POOL)
+    
+    print("user id is "+ user_id)
     response = client.auth_test()
-    return response['user_id']
-
-BOT_ID = get_bot_id()
-
-# @slack_event_adapter.on('message')
-# def message(payload):
-    # print(payload)
-    # session.get('goal_set', 'not set')
-    # event = payload.get('event', {})
-    # channel_id = event.get('channel')
-    # user_id = event.get('user')
-    # text = event.get('text')
-
-    # if text == "hi":
-    #     client.chat_postMessage(channel=channel_id, text='Hello World!')
-    
-
-    # r = redis.Redis(connection_pool=REDIS_POOL)
-    
-    # print("bot id is "+ BOT_ID)
-    # print("user id is "+ user_id)
-
-    # if r.exists('goal_set') and user_id != BOT_ID:
-    #     print("I was called from the combined logical conditions")
-    #     message = chatbot.get_next_predict(text)
-    #     client.chat_postMessage(channel=channel_id, text=message, as_user = True)
-    #     if text.lower() == "exit" or text.lower() == "end":
-    #         print("Conversation ended. Goodbye!")
+    # return response['user_id']
+    if r.exists('goal_set') and response['user_id'] != user_id:
+        print("I was called from the combined logical conditions")
+        message = chatbot.get_next_predict(text)
+        client.chat_postMessage(channel=channel_id, text=message, as_user = True)
+        if text.lower() == "exit" or text.lower() == "end":
+            print("Conversation ended. Goodbye!")
 
 
 
