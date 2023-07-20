@@ -107,7 +107,7 @@ def get_bot_id():
 BOT_ID = get_bot_id()
 
 @slack_event_adapter.on('message')
-def message(payload):
+def message(payload):jhgh
     print(payload)
     session.get('goal_set', 'not set')
     event = payload.get('event', {})
@@ -121,7 +121,7 @@ def message(payload):
 
     r = redis.Redis(connection_pool=REDIS_POOL)
     
-    if r.get('goal_set') is not None:
+    if r.get('goal_set') is not None and user_id != BOT_ID:
         message = chatbot.get_next_predict(text)
         client.chat_postMessage(channel=channel_id, text=message)
         if text.lower() == "exit" or text.lower() == "end":
