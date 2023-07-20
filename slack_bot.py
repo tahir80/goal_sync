@@ -142,7 +142,7 @@ def message(payload):
     if r.exists('goal_set') and response['user_id'] != user_id:
         print("I was called from the combined logical conditions")
         message = chatbot.get_next_predict(text)
-        client.chat_postMessage(channel=channel_id, text=message, as_user = True)
+        client.chat_postMessage(channel=channel_id, text=message)
         if text.lower() == "exit" or text.lower() == "end":
             print("Conversation ended. Goodbye!")
 
