@@ -100,7 +100,7 @@ def interactivity():
     return "", 200
 
 
-@client.events.on("app_mention")
+@slack_event_adapter.on("app_mention")
 def on_app_mention(data):
     channel_id = data["event"]["channel"]
     user_id = data["event"]["user"]
