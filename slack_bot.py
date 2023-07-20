@@ -107,11 +107,12 @@ def on_app_mention(data):
     print(channel_id)
     user_id = data["event"]["user"]
     message = f"Hello, <!channel>! We are starting a group conversation. Please join in!"
-    
-    # Post the group conversation message
-    response = client.conversations_open(users=[user_id])
-    group_channel_id = response["channel"]["id"]
-    client.chat_postMessage(channel=group_channel_id, text=message)
+    response = client.auth_test()
+    if response['user_id']!= user_id:
+        message = "Hello, <!channel>! We are starting a group conversation. Please join in."
+        
+        # Post the group conversation message in the public channel
+        client.chat_postMessage(channel=channel_id, text=message)
 
 
 def get_bot_id():
