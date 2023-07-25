@@ -1,6 +1,6 @@
 
 import slack
-from flask import Flask, request, jsonify, session
+from flask import Flask, abort, request, jsonify, session
 from flask_session import Session
 from slackeventsapi import SlackEventAdapter
 from os import environ
@@ -103,12 +103,21 @@ def interactivity():
 
     return "", 200
 
+def is_request_valid(request):
+    is_token_valid = request.form['token'] == os.environ['SLACK_VERIFICATION_TOKEN']
+    is_team_id_valid = request.form['team_id'] == os.environ['SLACK_TEAM_ID']
+
+    return is_token_valid and is_team_id_valid
+
 
 @app.route('/triggerchat', methods=['POST'])
 def triggerchat():
-    payload = request.form.get("payload")
-    print(payload)
-    return "", 200
+    if not is_request_valid(request):
+        abort(400)
+    return jsonify(
+        response_type='in_channel',
+        text='<https://youtu.be/frszEJb0aOo|General Kenobi!>',
+    )
 
 
 
