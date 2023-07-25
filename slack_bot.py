@@ -68,6 +68,10 @@ def endpoint():
 def test():
     return 'Welcome to the screen!'
 
+
+#https://renzolucioni.com/serverless-slash-commands-with-python/
+
+
 @app.route('/interactivity', methods=['POST'])
 def interactivity():
     print("I was called here")
@@ -98,6 +102,14 @@ def interactivity():
             break
 
     return "", 200
+
+
+@app.route('/triggerchat', methods=['POST'])
+def triggerchat():
+    payload = request.form.get("payload")
+    print(payload)
+    return "", 200
+
 
 
 @slack_event_adapter.on("app_mention")
@@ -131,7 +143,7 @@ def message(payload):
     text = event.get('text')
 
     if text == "hi":
-        client.chat_postMessage(channel=channel_id, text='Hello World!')
+        client.chat_postMessage(channel=channel_id, text='Hi, How can I help you?')
     
 
     r = redis.Redis(connection_pool=REDIS_POOL)
