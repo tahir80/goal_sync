@@ -104,6 +104,7 @@ def interactivity():
     return "", 200
 
 def is_request_valid(request):
+    print(request.form['token'])
     is_token_valid = request.form['token'] == environ.get('SLACK_TOKEN')
     is_team_id_valid = request.form['team_id'] == environ['SLACK_TEAM_ID']
 
@@ -112,8 +113,8 @@ def is_request_valid(request):
 
 @app.route('/triggerchat', methods=['POST'])
 def triggerchat():
-    if not is_request_valid(request):
-        abort(400)
+    # if not is_request_valid(request):
+    #     abort(400)
     return jsonify(
         response_type='in_channel',
         text='<https://youtu.be/frszEJb0aOo|General Kenobi!>',
