@@ -165,8 +165,8 @@ def message(payload):
     r = redis.Redis(connection_pool=REDIS_POOL)
     
     print("user id is "+ user_id)
-    print("user 2 id is "+response['user_id'])
     response = client.auth_test()
+    print("user 2 id is"+response['user_id'])
     # return response['user_id']
     if r.exists('goal_set') and response['user_id'] != user_id:
         print("I was called from the combined logical conditions")
