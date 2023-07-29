@@ -97,7 +97,7 @@ def interactivity():
     # Loop through the actions to find the desired text
     for action in actions:
         if action.get('text', {}).get('text') == "Set a goal":
-            print("success. I want to create a goalç")
+            print("success. I want to create a goal")
             r = redis.Redis(connection_pool=REDIS_POOL)
             print("User wants to create a goal first!")
             r.set('goal_set', 'goal_set')
@@ -165,6 +165,7 @@ def message(payload):
     r = redis.Redis(connection_pool=REDIS_POOL)
     
     print("user id is "+ user_id)
+    print("user 2 id is "+response['user_id'])
     response = client.auth_test()
     # return response['user_id']
     if r.exists('goal_set') and response['user_id'] != user_id:
