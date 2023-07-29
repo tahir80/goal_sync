@@ -2,8 +2,8 @@ import redis
 from os import environ
 
 class RedisDataStore:
-    def __init__(self, host=environ.get('REDIS_HOST'), port=environ.get('REDIS_PORT'), db=0):
-        self.redis_client = redis.StrictRedis(host=host, port=port, db=db)
+    def __init__(self, host, port, password):
+        self.redis_client = redis.Redis(host=host, port=port, password=password)
 
     def set_data(self, key, value, expiration=None):
         self.redis_client.set(key, value)
