@@ -106,7 +106,7 @@ def interactivity():
             # redis_store.set_data("_set_goal_", "set_goal", 300)
             print("User wants to create a goal first!")
             r.set('_goal_set_', 'goal_set')
-            r.expire(600)
+            r.expire("_goal_set_", 600)
 
             client.chat_postMessage(channel=channel_id, text=chatbot.kick_start())
             
