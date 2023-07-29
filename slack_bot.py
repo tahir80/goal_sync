@@ -103,7 +103,7 @@ def interactivity():
         if action.get('text', {}).get('text') == "Set a goal":
             print("success. I want to create a goal")
             # r = redis.Redis(connection_pool=REDIS_POOL)
-            redis_store.set_data("set_goal", "set_goal", 60)
+            redis_store.set_data("_set_goal_", "set_goal", 60)
             print("User wants to create a goal first!")
             # r.set('goal_set', 'goal_set')
 
@@ -173,7 +173,7 @@ def message(payload):
     response = client.auth_test()
     print("user 2 id is"+response['user_id'])
     # return response['user_id']
-    goal = redis_store.get_data('goal_set')
+    goal = redis_store.get_data('_set_goal_')
     value = goal.decode('utf-8')
     print("session value" + value)
     if value == "goal_set" and response['user_id'] != user_id:
