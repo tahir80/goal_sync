@@ -10,6 +10,8 @@ import json
 import redis
 
 from GoalSettingBot import SmartGoalSettingChatbot
+from RedisSessionStore import RedisDataStore
+
 
 
 SLACK_TOKEN = environ.get('SLACK_TOKEN')
@@ -21,12 +23,12 @@ REDIS_PORT = environ.get('REDIS_PORT')
 REDIS_PASS = environ.get('REDIS_PASS')
 
 
-REDIS_POOL = redis.ConnectionPool(
-    host=REDIS_HOST,
-    port=REDIS_PORT,
-    password=REDIS_PASS,
-    decode_responses=True  # Set to True to automatically decode responses to strings
-)
+# REDIS_POOL = redis.ConnectionPool(
+#     host=REDIS_HOST,
+#     port=REDIS_PORT,
+#     password=REDIS_PASS,
+#     decode_responses=True  # Set to True to automatically decode responses to strings
+# )
 
 
 
@@ -42,6 +44,8 @@ slack_event_adapter = SlackEventAdapter(SIGNING_SECRET, '/slack/events', app)
 client = slack.WebClient(token=SLACK_TOKEN)
 
 chatbot = SmartGoalSettingChatbot()
+
+redis_store = RedisDataStore(REDIS_HOST, REDIS_PORT, REDIS_PASS)
 
 try:
     response = client.auth_test()
@@ -98,9 +102,10 @@ def interactivity():
     for action in actions:
         if action.get('text', {}).get('text') == "Set a goal":
             print("success. I want to create a goal")
-            r = redis.Redis(connection_pool=REDIS_POOL)
+            # r = redis.Redis(connection_pool=REDIS_POOL)
+            redis_store.set_data("set_goal", "set_goal", 60)
             print("User wants to create a goal first!")
-            r.set('goal_set', 'goal_set')
+            # r.set('goal_set', 'goal_set')
 
             client.chat_postMessage(channel=channel_id, text=chatbot.kick_start())
             
@@ -109,12 +114,12 @@ def interactivity():
 
     return "", 200
 
-def is_request_valid(request):
-    print(request.form['token'])
-    is_token_valid = request.form['token'] == environ.get('SLACK_TOKEN')
-    is_team_id_valid = request.form['team_id'] == environ['SLACK_TEAM_ID']
+# def is_request_valid(request):
+#     print(request.form['token'])
+#     is_token_valid = request.form['token'] == environ.get('SLACK_TOKEN')
+#     is_team_id_valid = request.form['team_id'] == environ['SLACK_TEAM_ID']
 
-    return is_token_valid and is_team_id_valid
+#     return is_token_valid and is_team_id_valid
 
 
 @app.route('/triggerchat', methods=['POST'])
@@ -162,13 +167,15 @@ def message(payload):
         client.chat_postMessage(channel=channel_id, text='Hi, How can I help you?')
     
 
-    r = redis.Redis(connection_pool=REDIS_POOL)
+    # r = redis.Redis(connection_pool=REDIS_POOL)
     
     print("user id is "+ user_id)
     response = client.auth_test()
     print("user 2 id is"+response['user_id'])
     # return response['user_id']
-    if r.exists('goal_set') and response['user_id'] != user_id:
+    goal = redis_store.get_data('goal_set')
+    value = goal.decode('utf-8')
+    if value == "goal_set" and response['user_id'] != user_id:
         print("I was called from the combined logical conditions")
         message = chatbot.get_next_predict(text)
         client.chat_postMessage(channel=channel_id, text=message)

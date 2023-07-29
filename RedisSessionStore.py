@@ -1,26 +1,20 @@
+import redis
+from os import environ
 
+class RedisDataStore:
+    def __init__(self, host=environ.get('REDIS_HOST'), port=environ.get('REDIS_PORT'), db=0):
+        self.redis_client = redis.StrictRedis(host=host, port=port, db=db)
 
+    def set_data(self, key, value, expiration=None):
+        self.redis_client.set(key, value)
+        if expiration is not None:
+            self.redis_client.expire(key, expiration)
 
+    def get_data(self, key):
+        return self.redis_client.get(key)
 
-class SessionStore:
-    """Store session data in Redis."""
+    def delete_data(self, key):
+        self.redis_client.delete(key)
 
-    def __init__(self, token, url='redis://localhost:6379', ttl=10):
-        self.token = token
-        self.redis = redis.Redis.from_url(url)
-        self.ttl = ttl
-
-    def set(self, key, value):
-        self.refresh()
-        return self.redis.hset(self.token, key, value)
-
-    def get(self, key, value):
-        self.refresh()
-        return self.redis.hget(self.token, key)
-
-    def incr(self, key):
-        self.refresh()
-        return self.redis.hincrby(self.token, key, 1)
-
-    def refresh(self):
-        self.redis.expire(self.token, self.ttl)
+    def get_all_keys(self):
+        return self.redis_client.keys('*')
