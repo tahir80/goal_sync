@@ -176,8 +176,8 @@ def message(payload):
     # return response['user_id']
 
     value = r.get("_goal_set_")
-    if value is not None:
-        value = value.decode('utf-8')
+    # if value is not None:
+    #     value = value.decode('utf-8')
     
     print("session value" + value)
     if value == "goal_set" and response['user_id'] != user_id:
