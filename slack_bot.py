@@ -173,8 +173,17 @@ def message(payload):
     response = client.auth_test()
     print("user 2 id is"+response['user_id'])
     # return response['user_id']
+    value = ''
+    try:
+        data = redis_store.get_data("_goal_set_")
+        if data is not None:
+            value = goal.decode('utf-8')
+        else:
+            return "None"
+    except Exception as e:
+        return "null value"
     goal = redis_store.get_data('_set_goal_')
-    value = goal.decode('utf-8')
+    
     print("session value" + value)
     if value == "goal_set" and response['user_id'] != user_id:
         print("I was called from the combined logical conditions")
@@ -182,8 +191,6 @@ def message(payload):
         client.chat_postMessage(channel=channel_id, text=message)
         if text.lower() == "exit" or text.lower() == "end":
             print("Conversation ended. Goodbye!")
-
-
 
 
 @slack_event_adapter.on("member_joined_channel")
