@@ -173,16 +173,14 @@ def message(payload):
     response = client.auth_test()
     print("user 2 id is"+response['user_id'])
     # return response['user_id']
-    value = ''
-    try:
-        data = redis_store.get_data("_goal_set_")
-        if data is not None:
-            value = goal.decode('utf-8')
-        else:
-            return "None"
-    except Exception as e:
-        return "null value"
-    goal = redis_store.get_data('_set_goal_')
+   
+    value = redis_store.get_data("_goal_set_")
+    if value is not None:
+        value = value.decode('utf-8')
+    else:
+        value = ""
+
+    # goal = redis_store.get_data('_set_goal_')
     
     print("session value" + value)
     if value == "goal_set" and response['user_id'] != user_id:
