@@ -103,7 +103,7 @@ def interactivity():
         if action.get('text', {}).get('text') == "Set a goal":
             print("success. I want to create a goal")
             # r = redis.Redis(connection_pool=REDIS_POOL)
-            redis_store.set_data("_set_goal_", "set_goal", 60)
+            redis_store.set_data("_set_goal_", "set_goal", 300)
             print("User wants to create a goal first!")
             # r.set('goal_set', 'goal_set')
 
