@@ -64,7 +64,7 @@ def endpoint():
     return jsonify({'status': 'success'})
 # hello
 
-@app.route('slack/events', methods=['POST'])
+@app.route('/slack/events', methods=['POST'])
 def checkEvents():
     print("from: checkEvents")
     print(request.json)
