@@ -23,12 +23,12 @@ REDIS_PORT = environ.get('REDIS_PORT')
 REDIS_PASS = environ.get('REDIS_PASS')
 
 
-# REDIS_POOL = redis.ConnectionPool(
-#     host=REDIS_HOST,
-#     port=REDIS_PORT,
-#     password=REDIS_PASS,
-#     decode_responses=True  # Set to True to automatically decode responses to strings
-# )
+REDIS_POOL = redis.ConnectionPool(
+    host=REDIS_HOST,
+    port=REDIS_PORT,
+    password=REDIS_PASS,
+    decode_responses=True  # Set to True to automatically decode responses to strings
+)
 
 
 
@@ -45,7 +45,7 @@ client = slack.WebClient(token=SLACK_TOKEN)
 
 chatbot = SmartGoalSettingChatbot()
 
-redis_store = RedisDataStore(REDIS_HOST, REDIS_PORT, REDIS_PASS)
+# redis_store = RedisDataStore(REDIS_HOST, REDIS_PORT, REDIS_PASS)
 
 try:
     response = client.auth_test()
@@ -102,10 +102,11 @@ def interactivity():
     for action in actions:
         if action.get('text', {}).get('text') == "Set a goal":
             print("success. I want to create a goal")
-            # r = redis.Redis(connection_pool=REDIS_POOL)
-            redis_store.set_data("_set_goal_", "set_goal", 300)
+            r = redis.Redis(connection_pool=REDIS_POOL)
+            # redis_store.set_data("_set_goal_", "set_goal", 300)
             print("User wants to create a goal first!")
-            # r.set('goal_set', 'goal_set')
+            r.set('_goal_set_', 'goal_set')
+            r.expire(600)
 
             client.chat_postMessage(channel=channel_id, text=chatbot.kick_start())
             
@@ -157,7 +158,7 @@ def on_app_mention(data):
 @slack_event_adapter.on('message')
 def message(payload):
     print(payload)
-    session.get('goal_set', 'not set')
+    # session.get('goal_set', 'not set')
     event = payload.get('event', {})
     channel_id = event.get('channel')
     user_id = event.get('user')
@@ -167,20 +168,16 @@ def message(payload):
         client.chat_postMessage(channel=channel_id, text='Hi, How can I help you?')
     
 
-    # r = redis.Redis(connection_pool=REDIS_POOL)
+    r = redis.Redis(connection_pool=REDIS_POOL)
     
     print("user id is "+ user_id)
     response = client.auth_test()
     print("user 2 id is"+response['user_id'])
     # return response['user_id']
-   
-    value = redis_store.get_data("_goal_set_")
+
+    value = r.get("_goal_set_")
     if value is not None:
         value = value.decode('utf-8')
-    else:
-        value = ""
-
-    # goal = redis_store.get_data('_set_goal_')
     
     print("session value" + value)
     if value == "goal_set" and response['user_id'] != user_id:
