@@ -175,6 +175,7 @@ def message(payload):
     # return response['user_id']
     goal = redis_store.get_data('goal_set')
     value = goal.decode('utf-8')
+    print("session value" + value)
     if value == "goal_set" and response['user_id'] != user_id:
         print("I was called from the combined logical conditions")
         message = chatbot.get_next_predict(text)
