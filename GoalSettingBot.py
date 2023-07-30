@@ -32,7 +32,7 @@ class SmartGoalSettingChatbot:
 
         At the end, also congratulate them on their well-defined SMART goal. 
 
-        Also, tell them to type 'end-goal' in the chat once they have finsihed goal setting process
+        Also, tell them to type '\end-goal' in the chat once they have finsihed goal setting process
 
 
 

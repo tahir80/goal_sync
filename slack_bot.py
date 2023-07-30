@@ -144,9 +144,18 @@ def triggerchat():
     client.chat_postMessage(channel=channel_id, text=chatbot.kick_start())
 
     return jsonify(
-        text='test',
+        text='setgoal',
     )
 
+
+@app.route('/endgoal', methods=['POST'])
+def endgoal():
+    r = redis.Redis(connection_pool=REDIS_POOL)
+    r.delete('_goal_set_')
+
+    return jsonify(
+        text='endgoal',
+    )
 
 
 @slack_event_adapter.on("app_mention")
