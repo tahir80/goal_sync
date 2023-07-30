@@ -154,7 +154,8 @@ def endgoal():
     payload = request.form.to_dict()
     channel_id = payload.get('channel_id')
     r = redis.Redis(connection_pool=REDIS_POOL)
-    r.delete('_goal_set_')
+    if r.exists('_goal_set_'):
+        r.delete('_goal_set_')
 
     try:
         # Call the Slack API method to fetch the conversation history
