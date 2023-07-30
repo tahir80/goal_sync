@@ -182,7 +182,7 @@ def endgoal():
     
     except SlackApiError as e:
         error_message = f"Error fetching conversation history: {e}"
-        return jsonify({"error": error_message}), 500
+        return jsonify({"error": error_message})
 
 
 
