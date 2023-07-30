@@ -156,49 +156,36 @@ def endgoal():
     r = redis.Redis(connection_pool=REDIS_POOL)
     r.delete('_goal_set_')
 
-    # Store conversation history
-    conversation_history = []
-    # ID of the channel you want to send the message to
-
-    try:
-        # Call the conversations.history method using the WebClient
-        # conversations.history returns the first 100 messages by default
-        # These results are paginated, see: https://api.slack.com/methods/conversations.history$pagination
-        result = client.conversations_history(channel=channel_id)
-
-        conversation_history = result["messages"]
-
-        # Print results
-        print(conversation_history)
-
-    except SlackApiError as e:
-        print("Error creating conversation: {}".format(e))
-
-
-    return jsonify(
-        text='endgoal',
-    )
-
-def get_conversation_history(channel_id):
     try:
         # Call the Slack API method to fetch the conversation history
         response = client.conversations_history(
-            channel=channel_id,  # Replace with the actual channel ID
-            oldest="latest_slash_command_timestamp",  # Replace with the timestamp of the latest "specific slash command"
+            channel=channel_id,
+            limit=1000,  # Adjust the limit as needed to fetch enough messages
         )
         messages = response["messages"]
-        conversation_text = ""
+
+        # Extract the relevant information from the messages
+        relevant_messages = []
         for message in messages:
-            # Extract and concatenate the text from each message in the conversation
-            text = message.get("text")
-            if text:
-                conversation_text += text + "\n"
-        return conversation_text
-    except:
-        print("Error fetching conversation history")
-        return ""
+            # Extract user name and other relevant information
+            user_id = message.get("user", "")
+            user_info = client.users_info(user=user_id)
+            user_name = user_info["user"]["name"]
+
+            text = message.get("text", "")
+            timestamp = message.get("ts", "")
+
+            # Append the relevant information to the list
+            relevant_messages.append({"user_name": user_name, "text": text, "timestamp": timestamp})
+
+        return jsonify(relevant_messages)
     
-def get_latest_slash_command_timestamp(channel_id, slash_command):
+    except SlackApiError as e:
+        error_message = f"Error fetching conversation history: {e}"
+        return jsonify({"error": error_message}), 500
+
+
+
     try:
         # Call the Slack API method to fetch the conversation history
         response = client.conversations_history(
