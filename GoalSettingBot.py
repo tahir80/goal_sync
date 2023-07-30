@@ -34,8 +34,6 @@ class SmartGoalSettingChatbot:
 
         Also, tell them to type '\end-goal' in the chat once they have finsihed goal setting process
 
-
-
         {history}
         Human: {human_input}
         Assistant:"""

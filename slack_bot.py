@@ -3,6 +3,7 @@ import slack
 from flask import Flask, abort, request, jsonify, session
 from flask_session import Session
 from slackeventsapi import SlackEventAdapter
+from slack.errors import SlackApiError
 from os import environ
 import string
 import random
@@ -150,13 +151,74 @@ def triggerchat():
 
 @app.route('/endgoal', methods=['POST'])
 def endgoal():
+    payload = request.form.to_dict()
+    channel_id = payload.get('channel_id')
     r = redis.Redis(connection_pool=REDIS_POOL)
     r.delete('_goal_set_')
+
+    # Store conversation history
+    conversation_history = []
+    # ID of the channel you want to send the message to
+
+    try:
+        # Call the conversations.history method using the WebClient
+        # conversations.history returns the first 100 messages by default
+        # These results are paginated, see: https://api.slack.com/methods/conversations.history$pagination
+        result = client.conversations_history(channel=channel_id)
+
+        conversation_history = result["messages"]
+
+        # Print results
+        print(conversation_history)
+
+    except SlackApiError as e:
+        print("Error creating conversation: {}".format(e))
+
 
     return jsonify(
         text='endgoal',
     )
 
+def get_conversation_history(channel_id):
+    try:
+        # Call the Slack API method to fetch the conversation history
+        response = client.conversations_history(
+            channel=channel_id,  # Replace with the actual channel ID
+            oldest="latest_slash_command_timestamp",  # Replace with the timestamp of the latest "specific slash command"
+        )
+        messages = response["messages"]
+        conversation_text = ""
+        for message in messages:
+            # Extract and concatenate the text from each message in the conversation
+            text = message.get("text")
+            if text:
+                conversation_text += text + "\n"
+        return conversation_text
+    except:
+        print("Error fetching conversation history")
+        return ""
+    
+def get_latest_slash_command_timestamp(channel_id, slash_command):
+    try:
+        # Call the Slack API method to fetch the conversation history
+        response = client.conversations_history(
+            channel=channel_id,
+            limit=1000,  # Adjust the limit as needed to fetch enough messages
+        )
+        messages = response["messages"]
+
+        # Find the latest message containing the specific slash command
+        latest_slash_command_timestamp = None
+        for message in messages:
+            text = message.get("text", "")
+            if re.search(rf"/{re.escape(slash_command)}", text):
+                timestamp = float(message["ts"])
+                if not latest_slash_command_timestamp or timestamp > latest_slash_command_timestamp:
+                    latest_slash_command_timestamp = timestamp
+
+        return latest_slash_command_timestamp
+    except:
+        pass
 
 @slack_event_adapter.on("app_mention")
 def on_app_mention(data):
@@ -167,7 +229,7 @@ def on_app_mention(data):
     message = f"Hello, <!channel>! We are starting a group conversation. Please join in!"
     response = client.auth_test()
     if response['user_id']!= user_id:
-        message = "Hello, <!channel>! We are starting a group conversation. Please join in."
+        message = "Hello, <!channel>! How can I help you?"
         
         # Post the group conversation message in the public channel
         client.chat_postMessage(channel=channel_id, text=message)
