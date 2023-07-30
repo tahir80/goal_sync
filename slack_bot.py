@@ -106,7 +106,7 @@ def interactivity():
             # redis_store.set_data("_set_goal_", "set_goal", 300)
             print("User wants to create a goal first!")
             r.set('_goal_set_', 'goal_set')
-            r.expire("_goal_set_", 600)
+            r.expire("_goal_set_", 3600)
 
             client.chat_postMessage(channel=channel_id, text=chatbot.kick_start())
             
@@ -125,11 +125,26 @@ def interactivity():
 
 @app.route('/triggerchat', methods=['POST'])
 def triggerchat():
-    # if not is_request_valid(request):
-    #     abort(400)
+
+    # payload = request.form.get("payload")
+    # print(payload)
+    # payload_data = json.loads(payload)
+
+    # channel_id = payload_data['container']['channel_id']
+
+    payload = request.form.to_dict()
+    print(payload)
+
+    channel_id = payload.get('channel_id')
+
+    r = redis.Redis(connection_pool=REDIS_POOL)
+    r.set('_goal_set_', 'goal_set')
+    r.expire("_goal_set_", 3600)
+
+    client.chat_postMessage(channel=channel_id, text=chatbot.kick_start())
+
     return jsonify(
-        response_type='in_channel',
-        text='<https://youtu.be/frszEJb0aOo|General Kenobi!>',
+        text='test',
     )
 
 
@@ -164,8 +179,8 @@ def message(payload):
     user_id = event.get('user')
     text = event.get('text')
 
-    if text == "hi":
-        client.chat_postMessage(channel=channel_id, text='Hi, How can I help you?')
+    # if text == "hi":
+    #     client.chat_postMessage(channel=channel_id, text='Hi, How can I help you?')
     
 
     r = redis.Redis(connection_pool=REDIS_POOL)
