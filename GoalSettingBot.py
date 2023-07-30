@@ -30,7 +30,9 @@ class SmartGoalSettingChatbot:
 
         Throughout the conversation, you will provide tips and encouragement to keep them motivated and focused on their  journey toward achieving their  SMART goal.
 
-        At the end, also congratulate them on their well-defined SMART goal and bid you farewell. 
+        At the end, also congratulate them on their well-defined SMART goal. 
+
+        Also, tell them to type 'end-goal' in the chat once they have finsihed goal setting process
 
 
 
