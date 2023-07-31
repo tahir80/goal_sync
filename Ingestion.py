@@ -26,10 +26,11 @@ def ingest_docs(index_name, chat_history) -> None:
     # Check if the index is empty or not
     index = pinecone.Index(index_name)
     index_stats = index.describe_index_stats()
-    if index_stats[0].num_documents == 0:
-        # Index is empty, add the chat history
-        Pinecone.from_documents(chat_history, embeddings, index_name=index_name)
-    else:
-        # Index is not empty, update the embeddings (upsert operation)
-        Pinecone.upsert_documents(chat_history, embeddings, index_name=index_name)
+    print(index_stats)
+    # if index_stats[0].num_documents == 0:
+    #     # Index is empty, add the chat history
+    #     Pinecone.from_documents(chat_history, embeddings, index_name=index_name)
+    # else:
+    #     # Index is not empty, update the embeddings (upsert operation)
+    #     Pinecone.upsert_documents(chat_history, embeddings, index_name=index_name)
     
