@@ -19,12 +19,13 @@ def ingest_docs(index_name, chat_history) -> None:
             dimension=1536
         )
 
-    # Initialize the embeddings and Pinecone vector store
+    # Initialize the embeddings
     embeddings = OpenAIEmbeddings()
     # vectorstore = Pinecone(index_name=index_name)
 
     # Check if the index is empty or not
-    index_stats = pinecone.list_index_stats(index_name)
+    index = pinecone.Index(index_name)
+    index_stats = index.describe_index_stats()
     if index_stats[0].num_documents == 0:
         # Index is empty, add the chat history
         Pinecone.from_documents(chat_history, embeddings, index_name=index_name)
