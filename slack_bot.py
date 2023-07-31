@@ -164,7 +164,9 @@ def endgoal():
         r.delete('_goal_set_')
     
     print(chatbot.get_conversation_history())
-    asyncio.create_task(ingest_docs("chat-history-index", chatbot.get_conversation_history()))
+    # get the current event loop
+    loop = asyncio.get_event_loop()
+    loop.create_task(ingest_docs("chat-history-index", chatbot.get_conversation_history()))
 
     return jsonify(
         text='endgoal',
