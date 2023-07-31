@@ -158,7 +158,7 @@ def endgoal():
     if r.exists("_goal_set_") == 1:
         r.delete('_goal_set_')
     
-    print(SmartGoalSettingChatbot.get_conversation_history())
+    print(chatbot.get_conversation_history())
     
 
     return jsonify(
