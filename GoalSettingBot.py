@@ -8,6 +8,7 @@ from langchain.memory import ConversationBufferWindowMemory
 class SmartGoalSettingChatbot:
     def __init__(self):
         openai.api_key = environ.get('OPENAI_API_KEY')
+        self.memory = ConversationBufferWindowMemory(k=100)
         # Langchain implementation
         template = """Welcome to the SMART Goal Setting Chatbot!
 
@@ -47,7 +48,7 @@ class SmartGoalSettingChatbot:
             llm=OpenAI(temperature=0),
             prompt=self.prompt,
             verbose=True,
-            memory=ConversationBufferWindowMemory(k=100),
+            memory=self.memory,
         )
     
     def kick_start(self):
@@ -57,6 +58,9 @@ class SmartGoalSettingChatbot:
     def get_next_predict(self, input):
         output = self.chatgpt_chain.predict(human_input=input)
         return output
+    
+    def get_conversation_history(self):
+        return self.memory.load_memory_variables({})
 
 # if __name__ == "__main__":
 #     chatbot = SmartGoalSettingChatbot()

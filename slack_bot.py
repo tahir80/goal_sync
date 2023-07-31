@@ -154,59 +154,33 @@ def endgoal():
     payload = request.form.to_dict()
     channel_id = payload.get('channel_id')
     r = redis.Redis(connection_pool=REDIS_POOL)
-    if r.exists('_goal_set_'):
+    # r.delete('_goal_set_')
+    if delete_if_exists("_goal_set_"):
         r.delete('_goal_set_')
-
-    try:
-        # Call the Slack API method to fetch the conversation history
-        response = client.conversations_history(
-            channel=channel_id,
-            limit=1000,  # Adjust the limit as needed to fetch enough messages
-        )
-        messages = response["messages"]
-
-        # Extract the relevant information from the messages
-        relevant_messages = []
-        for message in messages:
-            # Extract user name and other relevant information
-            user_id = message.get("user", "")
-            user_info = client.users_info(user=user_id)
-            user_name = user_info["user"]["name"]
-
-            text = message.get("text", "")
-            timestamp = message.get("ts", "")
-
-            # Append the relevant information to the list
-            relevant_messages.append({"user_name": user_name, "text": text, "timestamp": timestamp})
-
-        return jsonify(relevant_messages)
     
-    except SlackApiError as e:
-        error_message = f"Error fetching conversation history: {e}"
-        return jsonify({"error": error_message})
+    print(SmartGoalSettingChatbot.get_conversation_history())
+    
 
+    return jsonify(
+        text='endgoal',
+    )
 
+def delete_if_exists(key):
+    # Start a transaction
+    pipeline = client.pipeline()
 
-    try:
-        # Call the Slack API method to fetch the conversation history
-        response = client.conversations_history(
-            channel=channel_id,
-            limit=1000,  # Adjust the limit as needed to fetch enough messages
-        )
-        messages = response["messages"]
+    # Check if the key exists using EXISTS command
+    pipeline.exists(key)
 
-        # Find the latest message containing the specific slash command
-        latest_slash_command_timestamp = None
-        for message in messages:
-            text = message.get("text", "")
-            if re.search(rf"/{re.escape(slash_command)}", text):
-                timestamp = float(message["ts"])
-                if not latest_slash_command_timestamp or timestamp > latest_slash_command_timestamp:
-                    latest_slash_command_timestamp = timestamp
+    # Execute the transaction
+    key_exists = pipeline.execute()[0]
 
-        return latest_slash_command_timestamp
-    except:
-        pass
+    # Delete the key only if it exists
+    if key_exists:
+        client.delete(key)
+        return True
+    else:
+        return False
 
 @slack_event_adapter.on("app_mention")
 def on_app_mention(data):
