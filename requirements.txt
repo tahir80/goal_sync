@@ -7,4 +7,5 @@ openai
 langchain
 redis
 Flask-Session
+pinecone-client
 

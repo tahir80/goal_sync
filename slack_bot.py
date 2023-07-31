@@ -11,7 +11,9 @@ import json
 import redis
 
 from GoalSettingBot import SmartGoalSettingChatbot
-from RedisSessionStore import RedisDataStore
+# from RedisSessionStore import RedisDataStore
+from Ingestion import ingest_docs
+
 
 
 
@@ -161,6 +163,8 @@ def endgoal():
         r.delete('_goal_set_')
     
     print(chatbot.get_conversation_history())
+
+    ingest_docs("chat_history_index", chatbot.get_conversation_history())
     
 
     return jsonify(
