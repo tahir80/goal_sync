@@ -164,7 +164,7 @@ def endgoal():
     
     print(chatbot.get_conversation_history())
 
-    ingest_docs("chat_history_index", chatbot.get_conversation_history())
+    ingest_docs("chat-history-index", chatbot.get_conversation_history())
     
 
     return jsonify(
