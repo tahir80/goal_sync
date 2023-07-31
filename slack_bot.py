@@ -142,6 +142,8 @@ def triggerchat():
     r.set('_goal_set_', 'goal_set')
     r.expire("_goal_set_", 3600)
 
+    chatbot.reset_memory()
+
     client.chat_postMessage(channel=channel_id, text=chatbot.kick_start())
 
     return jsonify(

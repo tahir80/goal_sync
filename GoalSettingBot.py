@@ -61,6 +61,8 @@ class SmartGoalSettingChatbot:
     
     def get_conversation_history(self):
         return self.memory.load_memory_variables({})
+    def reset_memory(self):
+        self.memory.reset()
 
 # if __name__ == "__main__":
 #     chatbot = SmartGoalSettingChatbot()
