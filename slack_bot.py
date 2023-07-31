@@ -9,6 +9,7 @@ import string
 import random
 import json
 import redis
+import asyncio
 
 from GoalSettingBot import SmartGoalSettingChatbot
 # from RedisSessionStore import RedisDataStore
@@ -163,9 +164,7 @@ def endgoal():
         r.delete('_goal_set_')
     
     print(chatbot.get_conversation_history())
-
-    ingest_docs("chat-history-index", chatbot.get_conversation_history())
-    
+    asyncio.create_task(ingest_docs("chat-history-index", chatbot.get_conversation_history()))
 
     return jsonify(
         text='endgoal',

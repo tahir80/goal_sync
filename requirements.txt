@@ -8,4 +8,5 @@ langchain
 redis
 Flask-Session
 pinecone-client
+asyncio
 
