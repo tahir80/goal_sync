@@ -155,7 +155,7 @@ def endgoal():
     channel_id = payload.get('channel_id')
     r = redis.Redis(connection_pool=REDIS_POOL)
     # r.delete('_goal_set_')
-    if delete_if_exists("_goal_set_"):
+    if r.exists("_goal_set_") == 1:
         r.delete('_goal_set_')
     
     print(SmartGoalSettingChatbot.get_conversation_history())
@@ -165,22 +165,6 @@ def endgoal():
         text='endgoal',
     )
 
-def delete_if_exists(key):
-    # Start a transaction
-    pipeline = client.pipeline()
-
-    # Check if the key exists using EXISTS command
-    pipeline.exists(key)
-
-    # Execute the transaction
-    key_exists = pipeline.execute()[0]
-
-    # Delete the key only if it exists
-    if key_exists:
-        client.delete(key)
-        return True
-    else:
-        return False
 
 @slack_event_adapter.on("app_mention")
 def on_app_mention(data):
