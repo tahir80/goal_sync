@@ -27,7 +27,7 @@ async def ingest_docs(index_name, chat_history) -> None:
     index = pinecone.Index(index_name)
     index_stats = index.describe_index_stats()
     print(index_stats)
-    if index_stats[3].total_vector_count == 0:
+    if index_stats['total_vector_count'] == 0:
         # Index is empty, add the chat history
         Pinecone.from_documents(chat_history, embeddings, index_name=index_name)
     else:
