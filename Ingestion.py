@@ -3,6 +3,7 @@ import pinecone
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.vectorstores.pinecone import Pinecone
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+import asyncio
 
 
 
@@ -40,8 +41,8 @@ async def ingest_docs(index_name, chat_history) -> None:
     print(index_stats)
     if index_stats['total_vector_count'] == 0:
         # Index is empty, add the chat history
-        Pinecone.from_documents(documents, embeddings, index_name=index_name)
+        await Pinecone.from_documents(documents, embeddings, index_name=index_name)
     else:
         # Index is not empty, update the embeddings (upsert operation)
-        Pinecone.upsert_documents(documents, embeddings, index_name=index_name)
+        await Pinecone.upsert_documents(documents, embeddings, index_name=index_name)
     
