@@ -12,7 +12,7 @@ pinecone.init(
     environment=os.environ["PINECONE_ENVIRONMENT_REGION"],
 )
 
-async def ingest_docs(index_name, chat_history) -> None:
+def ingest_docs(index_name, chat_history) -> None:
 
     # Check if the index already exists, if not, create it
     if index_name not in pinecone.list_indexes():

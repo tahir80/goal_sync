@@ -163,10 +163,11 @@ def endgoal():
     if r.exists("_goal_set_") == 1:
         r.delete('_goal_set_')
     
+    print("chat history is below: ")
     print(chatbot.get_conversation_history())
     # get the current event loop
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(ingest_docs("chat-history-index", chatbot.get_conversation_history()))
+    # loop = asyncio.get_event_loop()
+    # loop.run_until_complete(ingest_docs("chat-history-index", chatbot.get_conversation_history()))
 
     return jsonify(
         text='endgoal',
