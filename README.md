@@ -8,6 +8,6 @@ GoalKeeper is a collaborative goal-setting bot designed to assist you in setting
 
 Follow these steps to get started with GoalKeeper:
 
-1. Clone the repository: git clone [https://github.com/tahir80/goal_sync.git](https://github.com/tahir80/goal_sync.git)https://github.com/tahir80/goal_sync.git
+1. Clone the repository: git clone [https://github.com/tahir80/goal_sync.git](https://github.com/tahir80/goal_sync.git)
 2. cd goalkeeper
 
