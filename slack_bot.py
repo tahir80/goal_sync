@@ -284,53 +284,53 @@ def handle_team_join(payload):
                         "type": "mrkdwn",
                         "text": "Sounds exciting? Let's begin"
                     }
-                },
-                {
-                    "type": "actions",
-                    "elements": [
-                        {
-                            "type": "button",
-                            "text": {
-                                "type": "plain_text",
-                                "text": "Set a goal",
-                                "emoji": True
-                            },
-                            "value": "click_me_123",
-                            "action_id": "actionId-0"
-                        }
-                    ]
-                },
-                {
-                    "type": "actions",
-                    "elements": [
-                        {
-                            "type": "button",
-                            "text": {
-                                "type": "plain_text",
-                                "text": "Inspired me with some ideas",
-                                "emoji": True
-                            },
-                            "value": "click_me_123",
-                            "action_id": "actionId-0"
-                        }
-                    ]
-                },
-
-                 {
-                    "type": "actions",
-                    "elements": [
-                        {
-                            "type": "button",
-                            "text": {
-                                "type": "plain_text",
-                                "text": "Show goals set by others",
-                                "emoji": True
-                            },
-                            "value": "click_me_123",
-                            "action_id": "actionId-0"
-                        }
-                    ]
                 }
+                # {
+                #     "type": "actions",
+                #     "elements": [
+                #         {
+                #             "type": "button",
+                #             "text": {
+                #                 "type": "plain_text",
+                #                 "text": "Set a goal",
+                #                 "emoji": True
+                #             },
+                #             "value": "click_me_123",
+                #             "action_id": "actionId-0"
+                #         }
+                #     ]
+                # },
+                # {
+                #     "type": "actions",
+                #     "elements": [
+                #         {
+                #             "type": "button",
+                #             "text": {
+                #                 "type": "plain_text",
+                #                 "text": "Inspired me with some ideas",
+                #                 "emoji": True
+                #             },
+                #             "value": "click_me_123",
+                #             "action_id": "actionId-0"
+                #         }
+                #     ]
+                # },
+
+                #  {
+                #     "type": "actions",
+                #     "elements": [
+                #         {
+                #             "type": "button",
+                #             "text": {
+                #                 "type": "plain_text",
+                #                 "text": "Show goals set by others",
+                #                 "emoji": True
+                #             },
+                #             "value": "click_me_123",
+                #             "action_id": "actionId-0"
+                #         }
+                #     ]
+                # }
             ]
         }
 
