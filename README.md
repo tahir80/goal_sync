@@ -150,4 +150,7 @@ The `Ingestion` class handles the process of ingesting chat history data into a 
  **Note: Currently, I am planning to use Celery to improve the asynchronous call to Pinecone for storing vectors**
 
 
+ [Video Demo](https://screencast-o-matic.com/watch/c0jercVkCfa)
+
+
 
