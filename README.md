@@ -14,7 +14,7 @@ Follow these steps to get started with GoalKeeper:
 
 3. Set up environment variables:
 
-Before running the application, you need to set up the following environment variables on Heroku (https://devcenter.heroku.com/articles/config-vars):
+You need to set up the following environment variables on Heroku (https://devcenter.heroku.com/articles/config-vars):
 
 - `SLACK_TOKEN`: Your Slack bot token.
 - `SIGNING_SECRET`: Your Slack app signing secret.
